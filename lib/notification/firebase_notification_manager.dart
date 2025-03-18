@@ -1,20 +1,21 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:notification_center/notification/models/notification_model.dart';
 
 import 'base_notification_manager.dart';
 
 class FirebaseNotificationManager implements BaseNotificationManager {
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-  final StreamController<Map<String, dynamic>> _notificationStreamController =
-      StreamController<Map<String, dynamic>>.broadcast();
+  final StreamController<NotificationMessage> _notificationStreamController =
+      StreamController<NotificationMessage>.broadcast();
   final StreamController<String?> _userTokenStreamController =
       StreamController<String?>();
   @override
   Stream<String?> get userTokenStream => _userTokenStreamController.stream;
   @override
-  Stream<Map<String, dynamic>> get notificationStream =>
+  Stream<NotificationMessage> get notificationStream =>
       _notificationStreamController.stream;
 
   @override
@@ -49,18 +50,34 @@ class FirebaseNotificationManager implements BaseNotificationManager {
   Future<void> listenOnFirebaseNotifications() async {
     // Foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      _notificationStreamController.add(message.data);
+      _notificationStreamController.add(
+        NotificationMessage(
+          title: message.notification?.title,
+          body: message.notification?.body,
+          data: message.data,
+        ),
+      );
     });
 
-    // Background/terminated messages
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      _notificationStreamController.add(message.data);
+      _notificationStreamController.add(
+        NotificationMessage(
+          title: message.notification?.title,
+          body: message.notification?.body,
+          data: message.data,
+        ),
+      );
     });
 
-    // Get initial message (if app was terminated and opened via a notification)
     RemoteMessage? initialMessage = await firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
-      _notificationStreamController.add(initialMessage.data);
+      _notificationStreamController.add(
+        NotificationMessage(
+          title: initialMessage.notification?.title,
+          body: initialMessage.notification?.body,
+          data: initialMessage.data,
+        ),
+      );
     }
   }
 
