@@ -11,9 +11,9 @@ class FirebaseNotificationManager implements BaseNotificationManager {
       StreamController<Map<String, dynamic>>.broadcast();
   final StreamController<String?> _userTokenStreamController =
       StreamController<String?>();
-
+  @override
   Stream<String?> get userTokenStream => _userTokenStreamController.stream;
-
+  @override
   Stream<Map<String, dynamic>> get notificationStream =>
       _notificationStreamController.stream;
 
