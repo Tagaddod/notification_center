@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:notification_center/notification/models/notification_model.dart';
 
 import 'base_notification_manager.dart';
@@ -50,23 +51,28 @@ class FirebaseNotificationManager implements BaseNotificationManager {
   Future<void> listenOnFirebaseNotifications() async {
     // Foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      _notificationStreamController.add(
-        NotificationMessage(
-          title: message.notification?.title,
-          body: message.notification?.body,
-          data: message.data,
-        ),
-      );
+      debugPrint("Notification received: ${message.notification?.title}");
+      if (message.notification != null) {
+        _notificationStreamController.add(
+          NotificationMessage(
+            title: message.notification?.title,
+            body: message.notification?.body,
+            data: message.data,
+          ),
+        );
+      }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      _notificationStreamController.add(
-        NotificationMessage(
-          title: message.notification?.title,
-          body: message.notification?.body,
-          data: message.data,
-        ),
-      );
+      if (message.notification != null) {
+        _notificationStreamController.add(
+          NotificationMessage(
+            title: message.notification?.title,
+            body: message.notification?.body,
+            data: message.data,
+          ),
+        );
+      }
     });
 
     RemoteMessage? initialMessage = await firebaseMessaging.getInitialMessage();
