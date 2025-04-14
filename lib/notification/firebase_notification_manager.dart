@@ -112,4 +112,9 @@ class FirebaseNotificationManager implements BaseNotificationManager {
     return notificationSettings.authorizationStatus ==
         AuthorizationStatus.authorized;
   }
+
+  @override
+  Future<void> subscribeToTopic(String topic) async {
+    await FirebaseMessaging.instance.subscribeToTopic(topic);
+  }
 }
