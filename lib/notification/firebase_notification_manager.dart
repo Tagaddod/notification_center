@@ -21,6 +21,7 @@ class FirebaseNotificationManager implements BaseNotificationManager {
   @override
   Stream<NotificationMessage> get notificationStream =>
       _notificationStreamController.stream;
+  @override
   Stream<NotificationMessage> get onMessageOpenedAppStream =>
       _onMessageOpenedAppStreamController.stream;
 

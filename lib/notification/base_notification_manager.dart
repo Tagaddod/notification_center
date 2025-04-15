@@ -7,4 +7,5 @@ abstract class BaseNotificationManager {
   Future<void> onBackgroundMessageRecieved(dynamic handler);
   Stream<NotificationMessage> get notificationStream;
   Stream<String?> get userTokenStream;
+  Stream<NotificationMessage> get onMessageOpenedAppStream;
 }
