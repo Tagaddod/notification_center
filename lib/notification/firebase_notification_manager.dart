@@ -11,6 +11,9 @@ class FirebaseNotificationManager implements BaseNotificationManager {
 
   final StreamController<NotificationMessage> _notificationStreamController =
       StreamController<NotificationMessage>.broadcast();
+  final StreamController<NotificationMessage>
+      _onMessageOpenedAppStreamController =
+      StreamController<NotificationMessage>.broadcast();
   final StreamController<String?> _userTokenStreamController =
       StreamController<String?>();
   @override
@@ -18,6 +21,8 @@ class FirebaseNotificationManager implements BaseNotificationManager {
   @override
   Stream<NotificationMessage> get notificationStream =>
       _notificationStreamController.stream;
+  Stream<NotificationMessage> get onMessageOpenedAppStream =>
+      _onMessageOpenedAppStreamController.stream;
 
   @override
   Future<void> initializeNotification() async {
@@ -65,7 +70,7 @@ class FirebaseNotificationManager implements BaseNotificationManager {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.notification != null) {
-        _notificationStreamController.add(
+        _onMessageOpenedAppStreamController.add(
           NotificationMessage(
             title: message.notification?.title,
             body: message.notification?.body,
