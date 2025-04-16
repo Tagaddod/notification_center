@@ -83,7 +83,7 @@ class FirebaseNotificationManager implements BaseNotificationManager {
 
     RemoteMessage? initialMessage = await firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
-      _notificationStreamController.add(
+      _onMessageOpenedAppStreamController.add(
         NotificationMessage(
           title: initialMessage.notification?.title,
           body: initialMessage.notification?.body,
