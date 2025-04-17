@@ -16,11 +16,14 @@ class FirebaseNotificationManager implements BaseNotificationManager {
       StreamController<NotificationMessage>.broadcast();
   final StreamController<String?> _userTokenStreamController =
       StreamController<String?>();
+
   @override
   Stream<String?> get userTokenStream => _userTokenStreamController.stream;
+
   @override
   Stream<NotificationMessage> get notificationStream =>
       _notificationStreamController.stream;
+
   @override
   Stream<NotificationMessage> get onMessageOpenedAppStream =>
       _onMessageOpenedAppStreamController.stream;
@@ -33,7 +36,6 @@ class FirebaseNotificationManager implements BaseNotificationManager {
       if (permissionStatus) {
         await _getUserToken();
         _listenOnRefreshToken();
-
         listenOnFirebaseNotifications();
       }
     } on Exception catch (e) {
@@ -52,6 +54,18 @@ class FirebaseNotificationManager implements BaseNotificationManager {
       print("refreshed Token $token");
       _userTokenStreamController.add(token);
     });
+  }
+
+  @override
+  Future<NotificationMessage?> getInitialMessage() async {
+    RemoteMessage? initialMessage = await firebaseMessaging.getInitialMessage();
+    if (initialMessage != null) {
+      return NotificationMessage(
+        title: initialMessage.notification?.title,
+        body: initialMessage.notification?.body,
+        data: initialMessage.data,
+      );
+    }
   }
 
   Future<void> listenOnFirebaseNotifications() async {
@@ -80,17 +94,6 @@ class FirebaseNotificationManager implements BaseNotificationManager {
         );
       }
     });
-
-    RemoteMessage? initialMessage = await firebaseMessaging.getInitialMessage();
-    if (initialMessage != null) {
-      _onMessageOpenedAppStreamController.add(
-        NotificationMessage(
-          title: initialMessage.notification?.title,
-          body: initialMessage.notification?.body,
-          data: initialMessage.data,
-        ),
-      );
-    }
   }
 
   @override

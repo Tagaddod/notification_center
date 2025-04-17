@@ -8,4 +8,5 @@ abstract class BaseNotificationManager {
   Stream<NotificationMessage> get notificationStream;
   Stream<String?> get userTokenStream;
   Stream<NotificationMessage> get onMessageOpenedAppStream;
+  Future<NotificationMessage?> getInitialMessage();
 }
