@@ -32,7 +32,6 @@ class FirebaseNotificationManager implements BaseNotificationManager {
   Future<void> initializeNotification() async {
     try {
       final permissionStatus = await requestNotificationPermission();
-
       if (permissionStatus) {
         await _getUserToken();
         _listenOnRefreshToken();
@@ -114,7 +113,7 @@ class FirebaseNotificationManager implements BaseNotificationManager {
     );
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
+      alert: false, // Required to display a heads up notification
       badge: true,
       sound: true,
     );
