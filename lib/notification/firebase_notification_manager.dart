@@ -113,7 +113,7 @@ class FirebaseNotificationManager implements BaseNotificationManager {
     );
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
-      alert: false, // Required to display a heads up notification
+      alert: true, // Required to display a heads up notification
       badge: true,
       sound: true,
     );
