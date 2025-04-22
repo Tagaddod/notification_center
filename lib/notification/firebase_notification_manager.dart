@@ -71,7 +71,9 @@ class FirebaseNotificationManager implements BaseNotificationManager {
     // Foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint("Notification received: ${message.notification?.title}");
-      if (message.notification != null) {
+
+      if (message.notification != null &&
+          message.notification?.android != null) {
         _notificationStreamController.add(
           NotificationMessage(
             title: message.notification?.title,
